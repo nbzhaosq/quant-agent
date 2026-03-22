@@ -6,7 +6,7 @@
 
 AI-powered quantitative investment analysis agent for Chinese A-share markets, built with Claude Agent SDK, multi-agent collaboration, and GraphRAG.
 
-[English](#english) | [中文](#中文)
+[English](#english) | [中文](#中文) | [For AI Assistants](#for-ai-assistants)
 
 ---
 
@@ -250,6 +250,128 @@ uv run mypy src/
 - Tushare 部分接口需要积分，可在官网获取
 - Neo4j 需要独立运行（Docker 或本地安装）
 - 确保 `.env` 文件不被提交到版本控制
+
+---
+
+<a name="for-ai-assistants"></a>
+## For AI Assistants
+
+This section provides guidance for AI assistants (Claude, GPT, etc.) on how to set up and work with this project.
+
+### Pre-flight Checklist
+
+Before starting any work, verify the following:
+
+```bash
+# 1. Check Python version (requires 3.12+)
+python --version
+
+# 2. Check if uv is installed
+uv --version
+
+# 3. Check if running in project root
+ls pyproject.toml
+```
+
+### Dependency Installation
+
+```bash
+# Install all dependencies
+uv sync
+
+# Install dev dependencies (for testing/linting)
+uv sync --dev
+```
+
+### Environment Configuration
+
+1. **Check if `.env` exists and is configured:**
+
+```bash
+# Check if .env exists
+ls -la .env
+
+# If not, copy from example
+cp .env.example .env
+```
+
+2. **Required environment variables (minimum for basic functionality):**
+
+| Variable | Purpose | How to obtain |
+|----------|---------|---------------|
+| `TUSHARE_TOKEN` | A-share market data | Register at https://tushare.pro |
+| `ANTHROPIC_BASE_URL` | LLM API endpoint | Use `https://api.anthropic.com` or compatible |
+| `ANTHROPIC_API_KEY` | LLM authentication | Get from your LLM provider |
+| `ANTHROPIC_MODEL` | Model to use | e.g., `claude-sonnet-4-20250514` or `glm-5` |
+
+3. **Optional for GraphRAG (knowledge graph):**
+
+| Variable | Purpose |
+|----------|---------|
+| `NEO4J_URI` | Neo4j connection URL |
+| `NEO4J_USER` | Neo4j username |
+| `NEO4J_PASSWORD` | Neo4j password |
+| `GRAPHITI_LLM_MODEL` | LLM for entity extraction |
+| `GRAPHITI_LLM_BASE_URL` | LLM API URL |
+| `EMBEDDING_MODEL` | Embedding model name |
+| `EMBEDDING_BASE_URL` | Embedding API URL |
+| `EMBEDDING_DIMENSION` | Embedding vector dimension |
+
+### Quick Verification
+
+Run these commands to verify the setup:
+
+```bash
+# Verify CLI is working
+uv run quant-agent --help
+
+# Verify basic stock search (requires TUSHARE_TOKEN)
+uv run quant-agent search 茅台
+
+# Run tests
+uv run pytest
+```
+
+### Common Issues & Solutions
+
+| Issue | Solution |
+|-------|----------|
+| `ModuleNotFoundError: claude_agent_sdk` | Run `uv sync` to install dependencies |
+| `Tushare API error` | Check `TUSHARE_TOKEN` in `.env` |
+| `Neo4j connection refused` | Start Neo4j: `docker start neo4j` or skip GraphRAG features |
+| `GLM API returns empty content` | The `glm_llm_client.py` handles this - ensure it's being used |
+| `ExtractedEdges validation error` | Fixed in `glm_llm_client.py` v2 - ensure latest code |
+
+### Project Structure for AI Navigation
+
+```
+src/quant_agent/
+├── cli.py                 # Entry point - CLI commands
+├── core/
+│   ├── agent.py           # Single-agent mode
+│   ├── coordinator.py     # Multi-agent orchestration
+│   └── config.py          # Settings (pydantic-settings)
+├── agents/                # Specialized analysis agents
+├── knowledge/             # GraphRAG & vector store
+│   ├── graphiti_client.py # Knowledge graph client
+│   └── glm_llm_client.py  # GLM API compatibility layer
+├── tools/mcp_tools.py     # MCP tool definitions
+└── data/tushare_client.py # Tushare API wrapper
+```
+
+### Code Style Guidelines
+
+- Line length: 100 characters
+- Use `ruff format` for formatting
+- Type hints required (mypy strict mode)
+- Async functions for I/O operations
+
+### When Adding New Features
+
+1. **New MCP Tool**: Add to `tools/mcp_tools.py` using `@tool` decorator
+2. **New Agent**: Extend `SubAgentBase` in `agents/base.py`
+3. **New Analysis Type**: Add to appropriate agent or create new one
+4. **Configuration**: Add to `core/config.py` Settings class
 
 ## License
 
