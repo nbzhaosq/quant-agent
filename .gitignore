@@ -1,0 +1,55 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+venv/
+env/
+
+# Environment files (NEVER commit these!)
+.env
+.env.local
+.env.*.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.hypothesis/
+
+# Type checking
+.mypy_cache/
+.ruff_cache/
+
+# Data and databases
+data/
+*.csv
+*.parquet
+*.db
+*.sqlite
+
+# Generated files
+logs/
+report/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Local config
+*.local

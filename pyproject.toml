@@ -1,0 +1,93 @@
+[project]
+name = "quant-agent"
+version = "0.1.0"
+description = "AI-powered quantitative investment analysis agent with multi-agent collaboration and GraphRAG"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.12"
+authors = [
+    { name = "Nick", email = "nbzhaosq@gmail.com" }
+]
+keywords = [
+    "quantitative-finance",
+    "stock-analysis",
+    "ai-agent",
+    "claude",
+    "a-share",
+    "tushare",
+    "knowledge-graph",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Financial and Insurance Industry",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Office/Business :: Financial :: Investment",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "claude-agent-sdk>=0.1.0",
+    "tushare>=1.4.0",
+    "pandas>=2.2.0",
+    "numpy>=1.26.0",
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
+    "rich>=13.0.0",
+    "typer>=0.12.0",
+    "httpx>=0.27.0",
+    "graphiti-core>=0.1.0",
+    "neo4j>=5.0.0",
+    "sqlite-vec>=0.1.0",
+    "sentence-transformers>=3.0.0",
+    "markdown>=3.6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "ruff>=0.4.0",
+    "mypy>=1.9.0",
+]
+qlib = [
+    "pyqlib>=0.9.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/yourusername/quant-agent"
+Documentation = "https://github.com/yourusername/quant-agent#readme"
+Repository = "https://github.com/yourusername/quant-agent"
+Issues = "https://github.com/yourusername/quant-agent/issues"
+
+[project.scripts]
+quant-agent = "quant_agent.cli:app"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/quant_agent"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/quant_agent", "tests", "README.md", "LICENSE", "pyproject.toml"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+pythonpath = ["src"]
